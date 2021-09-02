@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Document</title>
+    </head>
+    <style>
+        img{
+            width:30%;
+        }
+        .center{
+            text-align: center;
+        }
+        body{
+            background-color: cadetblue;
+        }
+        .size{
+            font-size: 24px;
+        }
+    </style>
+    <body>
+        <h1 class="center">Movie Details</h1>
+        <div class="center">
+        <input type="text" id="movie" class="center" placeholder="Enter Movie name"/>
+        <button onclick="makerequest()" >Submit</button>
+        </div>
+<div class="center">
+        <div class="size"><p id="name"></p></div>
+       <div><img id="poster"/></div>
+       <div class="size"><p id="recommend"></p></div>
+       <div class="size"><p id="rating"></p></div>
+       
+       <div class="size"><p id="date"></p></div>
+       <div class="size"><p id="runtime"></p></div>
+       <div class="size"><p id="country"></p></div>
+       <div class="size"><p id="actor"></p></div>
+       <div class="size"><p id="director"></p></div>
+       <div class="size"><p id="genre"></p></div>
+      <div class="size"><p id="boxoffice"></p></div>
+      <div class="size"><p id="language"></p></div>
+      <div class="size"><p id="writer"></p></div>
+      <div class="size"><p id="error"></p></div>
+      <div class="size"><img id="error1"></p></div>
+    </body>
+    <script>
+        async function makerequest(){
+            try{
+                let movie=document.getElementById("movie").value;
+            let response=await fetch(`http://www.omdbapi.com/?t=${movie}&apikey=42240965`);
+            let data=await response.json();
+            console.log("data",data);
+            if("False"===data["Response"])
+            {
+                console.log("Hi");
+               // document.getElementById('error')=data["Error"];
+               document.getElementById("error").innerText=data["Error"];
+               document.getElementById("error1").src="https://i.redd.it/ds1luav7dl851.jpg";
+            }
+        
+            else{
+            document.getElementById('poster').src=data["Poster"];
+            
+            var test=document.getElementById("name").innerText=data["Title"];
+           
+
+            //name.innerHTML=test;
+            console.log(test);
+            if(8.5<data["imdbRating"]){
+                document.getElementById("recommend").innerText="Recommend";
+              
+            }
+            document.getElementById("rating").innerText=data["imdbRating"]; 
+            document.getElementById("date").innerText=data["DVD"];
+            document.getElementById("runtime").innerText=data["Runtime"];
+            document.getElementById("country").innerText=data["Country"];
+            document.getElementById("actor").innerText=data["Actors"];
+            document.getElementById("director").innerText=data["Director"];
+            document.getElementById("genre").innerText=data["Genre"];
+            document.getElementById("boxoffice").innerText=data["BoxOffice"];
+            document.getElementById("language").innerText=data["Language"];
+            document.getElementById("writer").innerText=data["Writer"];
+            }
+            }
+        catch(err){
+                console.log("errjjnkj:",err);
+                //document.getElementById("error").innerHTML=err;
+            }
+        }
+    </script>
+    </html>
