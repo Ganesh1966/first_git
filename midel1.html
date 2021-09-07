@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Document</title>
+    </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+    <style>
+       #video3{
+        width: 35%;
+  position: absolute;
+  left: 40%;
+  top: 4%;
+
+       }
+       #video{
+           width: 50%;
+
+       }
+       #grid{
+           margin-top: 8%;
+           margin-left: 10%;
+       }
+       .image{
+           width:120px;
+       }
+       .image1{
+           width:10px;
+       }
+       input[type=text] {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+       
+     button {
+       margin-left: 20px;
+  float: left;
+  width: 20%;
+  padding: 10px 2px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none;
+  cursor: pointer;
+}
+
+
+    </style>
+      <body>
+        
+<img src="https://logos-world.net/wp-content/uploads/2020/04/YouTube-Logo.png" class="image"/>
+    <div id="video3">
+        <div>
+       <input type="text" id="video" placeholder="search for videos..."/>
+       <button id="btn" onclick="searchVideos()"><i class="fa fa-search" ></i></button>
+       <div><i class="fa fa-microphone" style="font-size:42px;padding: 4px 5px;margin-left: 20px;"></i></div>
+       </div>
+       </div>
+            
+    <div id="grid">
+    
+    <div id="video2"><div id="videos-div">
+       
+    </div>
+    </div>
+      </body>
+    <script>
+            let div=document.getElementById("videos-div");
+            
+            async function searchVideos(){
+
+            let video=document.getElementById("video").value;
+
+            let response=await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=${video}&type=video&key=AIzaSyDGM-Qdrm5UNws2nzGFuYEmK2deLOMeH7w&maxResults=20`);
+
+            let data=await response.json();
+
+           console.log("data:",data);
+          
+            
+            for({
+                id:{ videoId },
+            } of data.items) {
+
+                let video_frame=document.createElement("iframe");
+
+                video_frame.src=`https://www.youtube.com/embed/${videoId}`;
+
+                video_frame.allow=`fullscreen`;
+
+                div.appendChild(video_frame);
+            }
+ }
+ </script>
+ </html>
