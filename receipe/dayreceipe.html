@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Recipe of the day</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        h1{
+            text-align: center;
+        }
+        </style>
+</head>
+
+<body>
+    <div id="navbar"></div>
+    <h1 >Recipe of the Day</h1>
+    <div id="meal-data"></div>
+</body>
+<script type="module">
+    import navbar from "./navbar.js";
+    document.getElementById("navbar").innerHTML = navbar();
+</script>
+<script>
+    let meal_data = document.getElementById("meal-data");
+
+
+
+function displayMeal (data){
+    let head = document.createElement("h1");
+    head.innerText = data.strMeal;
+
+    let bottom_div = document.createElement("div");
+
+
+    let right_div = document.createElement("div");
+
+    let image = document.createElement("img");
+    image.src = data.strMealThumb;
+
+    
+    let p = document.createElement("p");
+    p.innerText = data.strInstructions;
+
+    let head1 = document.createElement("h2");
+    head1.innerText = "Procedure : ";
+
+    right_div.append(head1,p);
+
+
+    let left_div = document.createElement("div");
+
+    let p1 = document.createElement("h3");
+    p1.innerText = "Category : " + data.strCategory;
+    
+    let p2 = document.createElement("h3");
+    p2.innerText = "Country : " + data.strArea;
+
+    let ingre = document.createElement("h2");
+    ingre.innerText = "Ingrediants";
+
+    left_div.append(p1,p2,ingre);
+
+    let str = "strIngredient";
+    let mea = "strMeasure";
+    let count = 1;
+    while(data[str+count] != ""){
+        let ing = document.createElement("p");
+        ing.innerText = count + ". " + data[str+count] + " : " + data[mea + count];
+        left_div.append(ing);
+
+        count++;
+    }
+
+    
+
+    bottom_div.append(left_div,right_div);
+    meal_data.append(head,image,bottom_div);
+    
+}
+
+
+async function search(key){
+
+    let res = await fetch(key);
+
+    let data = await res.json();
+    return data;
+
+}
+
+async function random(){
+    let data = await search("http://www.themealdb.com/api/json/v1/1/random.php");
+
+    displayMeal(data.meals[0]);
+
+}
+
+random();
+
+</script>
+</html>
