@@ -1,9 +1,129 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Document</title>
+        <title>Search Meals</title>
+        <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <h1>Hi</h1>
+    <div id="navbar"></div>
+    <input type="text" id="search" placeholder="Serach Dish" oninput="Meal()">
+    <div id="list"></div>
+    <div id="meal-data"></div>
+    <script type="module">
+        import navbar from "./navbar.js";
+        document.getElementById("navbar").innerHTML = navbar();
+    </script>
+    <script>
+        let div=document.getElementById("list");
+        let time;
+        let meal_data=document.getElementById("meal-data");
+        async function Meal(){
+            meal_data.style.display = "none";
+            let meal=document.getElementById("search").value;
+            if(meal.length==0)
+            {
+                div.style.display="none";
+                return false;
+
+            }
+            if(time)
+            {
+                clearTimeout(time);
+            }
+            time=setTimeout(()=>{
+            main();
+            
+            },1000);
+        }
+
+        async function main()
+        {
+            let meal=document.getElementById("search").value;
+            let data=await search(`http://www.themealdb.com/api/json/v1/1/search.php?s=${meal}`);
+            appended(data.meals);
+        }
+        async function search(key){
+            let res =await fetch(key);
+            let data=await res.json();
+            return data;
+        }
+        function appended(meals)
+        {
+            div.innerText = "";
+    div.style.display = "block";
+           meals.forEach(({strMeal,strCategory,strArea})=>{
+             let dish=document.createElement("div");
+             dish.innerText=strMeal +" ,  "+strArea +"  , "+ strCategory;
+             dish.onclick = () =>{
+            mealdata(strMeal);
+        }
+             div.append(dish);
+
+           });
+        }
+        async function mealdata(mealName)
+        {
+            meal_data.style.display = "block";
+    meal_data.innerText = "";
+            let meal=document.getElementById("search");
+            meal.value=mealName;
+            let data = await search(`http://www.themealdb.com/api/json/v1/1/search.php?s=${mealName}`);
+            displayMeal(data.meals[0],meal_data);
+
+        }
+        function displayMeal(data)
+        {  let head = document.createElement("h1");
+    head.innerText = data.strMeal;
+
+    let bottom_div = document.createElement("div");
+
+
+    let right_div = document.createElement("div");
+
+    let image = document.createElement("img");
+    image.src = data.strMealThumb;
+
+    
+    let p = document.createElement("p");
+    p.innerText = data.strInstructions;
+
+    let head1 = document.createElement("h2");
+    head1.innerText = "Procedure : ";
+
+    right_div.append(head1,p);
+
+
+    let left_div = document.createElement("div");
+
+    let p1 = document.createElement("h3");
+    p1.innerText = "Category : " + data.strCategory;
+    
+    let p2 = document.createElement("h3");
+    p2.innerText = "Country : " + data.strArea;
+
+    let ingre = document.createElement("h2");
+    ingre.innerText = "Ingrediants";
+
+    left_div.append(p1,p2,ingre);
+
+    let str = "strIngredient";
+    let mea = "strMeasure";
+    let count = 1;
+    while(data[str+count] != ""){
+        let ing = document.createElement("p");
+        ing.innerText = count + ". " + data[str+count] + " : " + data[mea + count];
+        left_div.append(ing);
+
+        count++;
+    }
+
+    
+
+    bottom_div.append(left_div,right_div);
+    meal_data.append(head,image,bottom_div);
+    
+}
+
+    </script>
     </body>
 </html>
